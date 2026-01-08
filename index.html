@@ -2,38 +2,162 @@
 <html lang="th">
 <head>
 <meta charset="UTF-8">
-<title>ตารางเวร</title>
+<title>ตารางเวรนักเรียน</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <style>
-  body {
-    font-family: sans-serif;
-    padding: 10px;
-    background: #f9f9f9;
+body {
+  font-family: sans-serif;
+  background: #f5f5f5;
+  margin: 0;
+  padding: 10px;
+}
+
+h2 {
+  text-align: center;
+  margin: 10px 0;
+}
+
+.controls {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+select {
+  padding: 6px;
+  font-size: 16px;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  background: white;
+}
+
+th, td {
+  border: 1px solid #ccc;
+  padding: 4px;
+  text-align: center;
+  font-size: 13px;
+}
+
+th {
+  background: #eee;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+.day-header {
+  font-size: 11px;
+  color: #555;
+}
+
+td.cell {
+  cursor: pointer;
+  font-weight: bold;
+}
+
+/* สีเวร */
+.v1 { background:#e3f2fd; }
+.v2 { background:#fce4ec; }
+.v3 { background:#e8f5e9; }
+.v4 { background:#fff3e0; }
+.v5 { background:#ede7f6; }
+.v6 { background:#f3e5f5; }
+.v7 { background:#e0f2f1; }
+.v8 { background:#fbe9e7; }
+
+</style>
+</head>
+<body>
+
+<h2>ตารางเวรนักเรียน</h2>
+
+<div class="controls">
+  เดือน:
+  <select id="month"></select>
+  ปี (พ.ศ.):
+  <select id="year"></select>
+</div>
+
+<table id="table"></table>
+
+<script>
+const students = [
+  "โน่","เอ","บี","ซี","ดี"
+];
+
+const monthNames = [
+  "มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน",
+  "กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"
+];
+
+const dayNamesShort = ["อา","จ","อ","พ","พฤ","ศ","ส"];
+
+const monthSelect = document.getElementById("month");
+const yearSelect = document.getElementById("year");
+const table = document.getElementById("table");
+
+// เติมเดือน
+monthNames.forEach((m,i)=>{
+  monthSelect.innerHTML += `<option value="${i}">${m}</option>`;
+});
+
+// เติมปี
+for(let y=2567;y<=2575;y++){
+  yearSelect.innerHTML += `<option value="${y}">${y}</option>`;
+}
+
+// ค่าเริ่มต้น
+monthSelect.value = new Date().getMonth();
+yearSelect.value = new Date().getFullYear() + 543;
+
+function render(){
+  const month = +monthSelect.value;
+  const yearBE = +yearSelect.value;
+  const yearCE = yearBE - 543;
+
+  const days = new Date(yearCE, month+1, 0).getDate();
+  table.innerHTML = "";
+
+  // แถวหัวตาราง
+  let tr = "<tr><th>ชื่อ</th>";
+  for(let d=1; d<=days; d++){
+    const date = new Date(yearCE, month, d);
+    const dayName = dayNamesShort[date.getDay()];
+    tr += `<th>${d}<div class="day-header">${dayName}</div></th>`;
   }
-  h2 { text-align: center; }
-  .controls {
-    text-align: center;
-    margin-bottom: 10px;
-  }
-  select {
-    font-size: 16px;
-    padding: 5px;
-    margin: 0 5px;
-  }
-  table {
-    border-collapse: collapse;
-    width: 100%;
-    background: white;
-  }
-  th, td {
-    border: 1px solid #ccc;
-    padding: 6px;
-    text-align: center;
-    font-size: 14px;
-  }
-  th {
-    background: #eee;
-    position: sticky;
+  tr += "</tr>";
+  table.innerHTML += tr;
+
+  // แถวข้อมูล
+  students.forEach(name=>{
+    let row = `<tr><td>${name}</td>`;
+    for(let d=1; d<=days; d++){
+      const v = ((d-1)%8)+1;
+      row += `<td class="cell v${v}" onclick="edit(this)">${v}</td>`;
+    }
+    row += "</tr>";
+    table.innerHTML += row;
+  });
+}
+
+function edit(td){
+  const val = prompt("ใส่เลขเวร (1-8)", td.innerText);
+  if(!val || val < 1 || val > 8) return;
+  td.className = "cell v"+val;
+  td.innerText = val;
+}
+
+monthSelect.onchange = render;
+yearSelect.onchange = render;
+
+render();
+</script>
+
+</body>
+</html>
     top: 0;
   }
   td.day {
