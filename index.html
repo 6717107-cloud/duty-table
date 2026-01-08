@@ -9,41 +9,34 @@ body{font-family:sans-serif;background:#f5f5f5;margin:0;padding:10px}
 h2{text-align:center}
 .controls{text-align:center;margin-bottom:10px}
 select{padding:6px;font-size:16px}
-
 table{border-collapse:collapse;width:100%;background:#fff}
 th,td{border:1px solid #ccc;padding:4px;text-align:center;font-size:13px}
 th{background:#eee;position:sticky;top:0}
 .section{background:#dfefff;font-weight:bold}
 .day{font-size:11px;color:#555}
 .cell{cursor:pointer;font-weight:bold}
-
-.v1{background:#e3f2fd}
-.v2{background:#fce4ec}
-.v3{background:#e8f5e9}
-.v4{background:#fff3e0}
-.v5{background:#ede7f6}
-.v6{background:#f3e5f5}
-.v7{background:#e0f2f1}
-.v8{background:#fbe9e7}
+.v1{background:#e3f2fd}.v2{background:#fce4ec}.v3{background:#e8f5e9}
+.v4{background:#fff3e0}.v5{background:#ede7f6}.v6{background:#f3e5f5}
+.v7{background:#e0f2f1}.v8{background:#fbe9e7}
 </style>
 </head>
-
 <body>
 
 <h2>ตารางเวรนักเรียน (จันทร์–ศุกร์)</h2>
 
 <div class="controls">
-  เดือน:
-  <select id="month"></select>
-  ปี (พ.ศ.):
-  <select id="year"></select>
+  เดือน <select id="month"></select>
+  ปี (พ.ศ.) <select id="year"></select>
 </div>
 
 <table id="table"></table>
 
 <script>
-// ===== รายชื่อ =====
+// ================= DATA =================
+
+// สภานักเรียน (ครบทุกห้อง)
 const council = [
+  // 5/1
   {name:"นาย ณัฐวัฒน์ เกตุนอก",room:"5/1"},
   {name:"นาย กฤตภาส นามพะเนาว์",room:"5/1"},
   {name:"นางสาว พิยดา วงศ์ใหญ่",room:"5/1"},
@@ -52,22 +45,73 @@ const council = [
   {name:"นางสาว พิชญา ซ้ายจันทึก",room:"5/1"},
   {name:"นางสาว ณิชานันท์ นาคหมื่นไวย์",room:"5/1"},
   {name:"นาย ภาณุพงษ์ ดันไธสง",room:"5/1"},
-  {name:"นาย เปรมอานนท์ เตี้ยจัตุรัส",room:"5/1"}
+  {name:"นาย เปรมอานนท์ เตี้ยจัตุรัส",room:"5/1"},
+
+  // 5/2
+  {name:"นาย กวินภพ บ้วนนอก",room:"5/2"},
+  {name:"นาย ก้องนเรนทร์ กระจ่างโพธิ์",room:"5/2"},
+  {name:"นาย ฐิติพันธุ์ เตี้ยไธสง",room:"5/2"},
+  {name:"นาย ปัญญา ทองนอก",room:"5/2"},
+  {name:"นางสาว อภิรดา สัญจรโคกสูง",room:"5/2"},
+  {name:"นางสาว ภคนันท์ รักกลาง",room:"5/2"},
+  {name:"นางสาว อารีญากร ปราบอาต",room:"5/2"},
+  {name:"นางสาว พรสวรรค์ ขาวละออ",room:"5/2"},
+  {name:"นางสาว กัญญา มุ่งกลาง",room:"5/2"},
+
+  // 5/3
+  {name:"นาย ศุกลวัฒน์ นรินทร์นอก",room:"5/3"},
+  {name:"นาย ภัครพนธ์ บุญธานี",room:"5/3"},
+  {name:"นาย ณัฐกิตติ์ รอดวินิจ",room:"5/3"},
+  {name:"นางสาว นฤเนตร จรรยารัตนกุล",room:"5/3"},
+  {name:"นางสาว วราทิพย์ นนนอก",room:"5/3"},
+  {name:"นางสาว ธนาพร วงษ์อัง",room:"5/3"},
+
+  // 5/4
+  {name:"นาย นนทกร โค้งนอก",room:"5/4"},
+  {name:"นางสาว รัชชยาวตรี ป้องภักดี",room:"5/4"},
+
+  // 5/5
+  {name:"นางสาว วัชราภรณ์ ห่องคำ",room:"5/5"},
+  {name:"นางสาว ภัทธีมา ชัยชะนะ",room:"5/5"},
+  {name:"นาย ธีรกานต์ ทาทอง",room:"5/5"},
+
+  // 5/6–5/11
+  {name:"นางสาว ชนิกา ชาญตะกั่ว",room:"5/6"},
+  {name:"นางสาว ถิรมน ปุ๊กสูงเนิน",room:"5/7"},
+  {name:"นาย พัสกร ปิ่นประเสริฐ",room:"5/9"},
+  {name:"นาย ณัฐกานต์ ร้อยลา",room:"5/11"},
+  {name:"นางสาว ชาลิสา แสงทองสี",room:"5/11"},
+  {name:"นางสาว จุฑารัตน์ ทดกลาง",room:"5/11"},
+  {name:"นางสาว วรัทยา หมู่โสภิญ",room:"5/11"},
+  {name:"นางสาว อาริสรา กุนอก",room:"5/11"},
+  {name:"นางสาว ชฎาพร อุสาพรหม",room:"5/11"},
+  {name:"นางสาว ณัชชา บินอารีเปน",room:"5/11"}
 ];
 
+// อนุกรรมการ
 const subcommittee = [
   {name:"นางสาว วรกาญจน์ โพธิ์กลิ่น",room:"4/1"},
   {name:"นางสาว สิริกานดา ขอร่วมกลาง",room:"4/1"},
   {name:"นาย สุริยะ ปากวิเศษ",room:"4/2"},
   {name:"นางสาว ธนกมล ศรีธาวิรัตน์",room:"4/2"},
-  {name:"นางสาว ปาริฉัตร ผึ่งด่านกลาง",room:"4/2"}
+  {name:"นางสาว ปาริฉัตร ผึ่งด่านกลาง",room:"4/2"},
+  {name:"นาย ทิวาวัชร์ แก้วลอดหล้า",room:"4/3"},
+  {name:"นางสาว จงกลณี ปัญญา",room:"4/4"},
+  {name:"นาย ฉัตรดนัย ทองอินทร์",room:"4/7"},
+  {name:"นาย ก้องภพ แสนธนู",room:"4/12"},
+  {name:"นาย สุวรรณภูมิ จบศรี",room:"4/12"},
+  {name:"นาย เดชาวัต ตากิ่มนอก",room:"4/12"},
+  {name:"นาย สุภกิตต์ วรวุฒิ",room:"4/12"},
+  {name:"นางสาว ธัญรดา พูนสันเทียะ",room:"4/12"},
+  {name:"นางสาว ณัฐกานต์ พระริต",room:"4/12"},
+  {name:"นางสาว พิชญากร มุ่งผลกลาง",room:"4/12"},
+  {name:"นางสาว เกวลิน ดุงโคกกรวด",room:"4/12"}
 ];
 
-// ===== ระบบ =====
+// ================= SYSTEM =================
 const monthNames=["มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน",
 "กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"];
 const dayNames=["อา","จ","อ","พ","พฤ","ศ","ส"];
-
 const mSel=document.getElementById("month");
 const ySel=document.getElementById("year");
 const table=document.getElementById("table");
@@ -77,24 +121,22 @@ for(let y=2567;y<=2575;y++) ySel.innerHTML+=`<option>${y}</option>`;
 mSel.value=new Date().getMonth();
 ySel.value=new Date().getFullYear()+543;
 
+function getKey(){ return `duty-${mSel.value}-${ySel.value}` }
+function save(data){ localStorage.setItem(getKey(),JSON.stringify(data)) }
+function load(){ return JSON.parse(localStorage.getItem(getKey())||"{}") }
+
 function render(){
   table.innerHTML="";
-  const m=+mSel.value;
-  const y=+ySel.value-543;
-
+  const m=+mSel.value,y=+ySel.value-543;
   const days=[];
-  const max=new Date(y,m+1,0).getDate();
-  for(let d=1;d<=max;d++){
+  for(let d=1;d<=new Date(y,m+1,0).getDate();d++){
     const dt=new Date(y,m,d);
-    if(dt.getDay()!=0 && dt.getDay()!=6){
-      days.push({d,day:dt.getDay()});
-    }
+    if(dt.getDay()!=0 && dt.getDay()!=6) days.push(d);
   }
 
-  let head="<tr><th>ชื่อ</th><th>ห้อง</th>";
-  days.forEach(x=>head+=`<th>${x.d}<div class="day">${dayNames[x.day]}</div></th>`);
-  head+="</tr>";
-  table.innerHTML+=head;
+  let h="<tr><th>ชื่อ</th><th>ห้อง</th>";
+  days.forEach(d=>h+=`<th>${d}</th>`); h+="</tr>";
+  table.innerHTML+=h;
 
   addSection("สภานักเรียน",council,days);
   addSection("อนุกรรมการ",subcommittee,days);
@@ -102,42 +144,36 @@ function render(){
 
 function addSection(title,list,days){
   table.innerHTML+=`<tr class="section"><td colspan="${days.length+2}">${title}</td></tr>`;
-  list.forEach((s,index)=>{
-    let r=`<tr>
-      <td>${index+1}. ${s.name}</td>
-      <td>${s.room}</td>`;
-    days.forEach((_,i)=>{
-      const v=i%8+1;
-      r+=`<td class="cell v${v}" onclick="edit(this)">${v}</td>`;
+  const data=load();
+  list.forEach((s,i)=>{
+    let r=`<tr><td>${i+1}. ${s.name}</td><td>${s.room}</td>`;
+    days.forEach((_,d)=>{
+      const key=`${s.name}-${d}`;
+      const v=data[key]||((d%8)+1);
+      r+=`<td class="cell v${v}" onclick="edit(this,'${s.name}',${d})">${v}</td>`;
     });
-    r+="</tr>";
-    table.innerHTML+=r;
+    r+="</tr>"; table.innerHTML+=r;
   });
 }
 
-// 🔥 ฟังก์ชันแก้แล้วรันเลขต่ออัตโนมัติ
-function edit(td){
-  let start = parseInt(prompt("ใส่เลขเวรเริ่มต้น (1-8)", td.innerText));
-  if(start < 1 || start > 8) return;
-
-  const row = td.parentElement;
-  const cells = Array.from(row.querySelectorAll(".cell"));
-
-  let index = cells.indexOf(td);
-  let value = start;
-
-  for(let i=index;i<cells.length;i++){
-    cells[i].innerText = value;
-    cells[i].className = "cell v" + value;
-    value++;
-    if(value > 8) value = 1;
+function edit(td,name,startDay){
+  let start=parseInt(prompt("เลขเริ่มต้น (1-8)",td.innerText));
+  if(start<1||start>8) return;
+  const row=td.parentElement;
+  const cells=[...row.querySelectorAll(".cell")];
+  let i=cells.indexOf(td),v=start,data=load();
+  for(;i<cells.length;i++){
+    cells[i].innerText=v;
+    cells[i].className="cell v"+v;
+    data[`${name}-${startDay+(i-cells.indexOf(td))}`]=v;
+    v=v%8+1;
   }
+  save(data);
 }
 
 mSel.onchange=render;
 ySel.onchange=render;
 render();
 </script>
-
 </body>
 </html>
