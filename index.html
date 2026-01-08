@@ -5,32 +5,28 @@
 <title>ตารางเวรนักเรียน</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-body{font-family:sans-serif;background:#f5f5f5;margin:0;padding:10px}
+body{font-family:sans-serif;background:#f5f5f5;padding:10px}
 h2{text-align:center}
 .controls{text-align:center;margin-bottom:10px}
-select,input,button{padding:6px;font-size:16px;margin:4px}
+input,select,button{padding:6px;font-size:16px;margin:4px}
 table{border-collapse:collapse;width:100%;background:#fff}
 th,td{border:1px solid #ccc;padding:4px;text-align:center;font-size:13px}
 th{background:#eee;position:sticky;top:0}
 .section{background:#dfefff;font-weight:bold}
-.cell{cursor:pointer;font-weight:bold}
-.today{outline:3px solid red}
-.v1{background:#e3f2fd}.v2{background:#fce4ec}.v3{background:#e8f5e9}
-.v4{background:#fff3e0}.v5{background:#ede7f6}.v6{background:#f3e5f5}
-.v7{background:#e0f2f1}.v8{background:#fbe9e7}
+.cell{font-weight:bold;cursor:pointer}
 #result{background:#fff;margin-top:10px;padding:10px;border-radius:6px}
 </style>
 </head>
 <body>
 
-<h2>ตารางเวรนักเรียน (เวรต่อเนื่องทั้งปี)</h2>
+<h2>ตารางเวรนักเรียน</h2>
 
 <div class="controls">
   เดือน <select id="month"></select>
   ปี (พ.ศ.) <select id="year"></select><br>
-  🔍 ค้นหาเลขเวรวันนี้ <input id="search" type="number" min="1" max="8" placeholder="1-8"><br>
-  <button onclick="showToday()">ดูเฉพาะวันนี้</button>
-  <button onclick="resetAll()" style="background:#ffcccc">รีเซ็ตเวรใหม่ทั้งปี</button>
+  🔍 ค้นหาเลขเวรวันนี้
+  <input id="search" type="number" min="1" max="8" placeholder="1-8">
+  <button onclick="render()">รีเฟรชตาราง</button>
 </div>
 
 <table id="table"></table>
@@ -38,10 +34,42 @@ th{background:#eee;position:sticky;top:0}
 
 <script>
 // ================= DATA =================
-const council=[/* ข้อมูลเดิมครบ */].concat([]);
-// (เพื่อไม่ให้ยาวเกิน หน้านี้ยังใช้ข้อมูลเดิมของคุณทุกอย่าง)
+const council=[
+"นาย ณัฐวัฒน์ เกตุนอก|5/1","นาย กฤตภาส นามพะเนาว์|5/1","นางสาว พิยดา วงศ์ใหญ่|5/1",
+"นางสาว กันกมล มูลจันทร์|5/1","นางสาว พรรณิภา คำสอนพันธุ์|5/1",
+"นางสาว พิชญา ซ้ายจันทึก|5/1","นางสาว ณิชานันท์ นาคหมื่นไวย์|5/1",
+"นาย ภาณุพงษ์ ดันไธสง|5/1","นาย เปรมอานนท์ เตี้ยจัตุรัส|5/1",
+"นาย กวินภพ บ้วนนอก|5/2","นาย ก้องนเรนทร์ กระจ่างโพธิ์|5/2",
+"นาย ฐิติพันธุ์ เตี้ยไธสง|5/2","นาย ปัญญา ทองนอก|5/2",
+"นางสาว อภิรดา สัญจรโคกสูง|5/2","นางสาว ภคนันท์ รักกลาง|5/2",
+"นางสาว อารีญากร ปราบอาต|5/2","นางสาว พรสวรรค์ ขาวละออ|5/2",
+"นางสาว กัญญา มุ่งกลาง|5/2",
+"นาย ศุกลวัฒน์ นรินทร์นอก|5/3","นาย ภัครพนธ์ บุญธานี|5/3",
+"นาย ณัฐกิตติ์ รอดวินิจ|5/3","นางสาว นฤเนตร จรรยารัตนกุล|5/3",
+"นางสาว วราทิพย์ นนนอก|5/3","นางสาว ธนาพร วงษ์อัง|5/3",
+"นาย นนทกร โค้งนอก|5/4","นางสาว รัชชยาวตรี ป้องภักดี|5/4",
+"นางสาว วัชราภรณ์ ห่องคำ|5/5","นางสาว ภัทธีมา ชัยชะนะ|5/5",
+"นาย ธีรกานต์ ทาทอง|5/5",
+"นางสาว ชนิกา ชาญตะกั่ว|5/6","นางสาว ถิรมน ปุ๊กสูงเนิน|5/7",
+"นาย พัสกร ปิ่นประเสริฐ|5/9",
+"นาย ณัฐกานต์ ร้อยลา|5/11","นางสาว ชาลิสา แสงทองสี|5/11",
+"นางสาว จุฑารัตน์ ทดกลาง|5/11","นางสาว วรัทยา หมู่โสภิญ|5/11",
+"นางสาว อาริสรา กุนอก|5/11","นางสาว ชฎาพร อุสาพรหม|5/11",
+"นางสาว ณัชชา บินอารีเปน|5/11"
+].map(x=>({name:x.split("|")[0],room:x.split("|")[1]}));
 
-// ================= SYSTEM =================
+const subcommittee=[
+"นางสาว วรกาญจน์ โพธิ์กลิ่น|4/1","นางสาว สิริกานดา ขอร่วมกลาง|4/1",
+"นาย สุริยะ ปากวิเศษ|4/2","นางสาว ธนกมล ศรีธาวิรัตน์|4/2",
+"นางสาว ปาริฉัตร ผึ่งด่านกลาง|4/2","นาย ทิวาวัชร์ แก้วลอดหล้า|4/3",
+"นางสาว จงกลณี ปัญญา|4/4","นาย ฉัตรดนัย ทองอินทร์|4/7",
+"นาย ก้องภพ แสนธนู|4/12","นาย สุวรรณภูมิ จบศรี|4/12",
+"นาย เดชาวัต ตากิ่มนอก|4/12","นาย สุภกิตต์ วรวุฒิ|4/12",
+"นางสาว ธัญรดา พูนสันเทียะ|4/12","นางสาว ณัฐกานต์ พระริต|4/12",
+"นางสาว พิชญากร มุ่งผลกลาง|4/12","นางสาว เกวลิน ดุงโคกกรวด|4/12"
+].map(x=>({name:x.split("|")[0],room:x.split("|")[1]}));
+
+// ================= ระบบเดือน/ปี =================
 const monthSel=document.getElementById("month");
 const yearSel=document.getElementById("year");
 const table=document.getElementById("table");
@@ -58,13 +86,7 @@ for(let y=2567;y<=2575;y++) yearSel.innerHTML+=`<option>${y}</option>`;
 monthSel.value=new Date().getMonth();
 yearSel.value=new Date().getFullYear()+543;
 
-function getLast(){return JSON.parse(localStorage.getItem("last-duty")||"{}");}
-function saveLast(d){localStorage.setItem("last-duty",JSON.stringify(d));}
-function key(){return `month-${monthSel.value}-${yearSel.value}`;}
-function load(){return JSON.parse(localStorage.getItem(key())||"{}");}
-function save(d){localStorage.setItem(key(),JSON.stringify(d));}
-
-// ================= RENDER =================
+// ================= สร้างตาราง =================
 function render(){
  table.innerHTML="";
  const y=yearSel.value-543,m=+monthSel.value;
@@ -77,56 +99,35 @@ function render(){
  let h="<tr><th>ชื่อ</th><th>ห้อง</th>";
  days.forEach(d=>h+=`<th>${dayNames[d.wd]}<br>${d.day}</th>`);
  h+="</tr>";
- table.innerHTML+=h;
+ table.innerHTML=h;
 
  addSection("สภานักเรียน",council,days);
+ addSection("อนุกรรมการ",subcommittee,days);
  find();
 }
 
 function addSection(title,list,days){
  table.innerHTML+=`<tr class="section"><td colspan="${days.length+2}">${title}</td></tr>`;
- let monthData=load(), last=getLast();
- list.forEach((s,i)=>{
-   let start=(last[s.name]||0)%8+1;
-   let r=`<tr><td>${i+1}. ${s.name}</td><td>${s.room}</td>`;
+ list.forEach((p,i)=>{
+   let start=(i%8)+1;
+   let r=`<tr><td>${i+1}. ${p.name}</td><td>${p.room}</td>`;
    days.forEach((d,j)=>{
-     let v=monthData[`${s.name}-${j}`]||((start+j-1)%8+1);
-     r+=`<td class="cell v${v}" onclick="edit(this,'${s.name}',${j})">${v}</td>`;
+     let v=(start+j-1)%8+1;
+     r+=`<td class="cell">${v}</td>`;
    });
    r+="</tr>";
    table.innerHTML+=r;
  });
 }
 
-// ================= EDIT =================
-function edit(td,name,startIndex){
- let v=parseInt(prompt("เลขเวรเริ่มต้น (1-8)",td.innerText));
- if(!v||v<1||v>8) return;
-
- let cells=[...td.parentElement.querySelectorAll(".cell")];
- let idx=cells.indexOf(td);
- let data=load(), last=getLast();
-
- for(let i=idx;i<cells.length;i++){
-   cells[i].innerText=v;
-   cells[i].className="cell v"+v;
-   data[`${name}-${i}`]=v;
-   v=v%8+1;
- }
-
- last[name]=v===1?8:v-1;
- saveLast(last); save(data); find();
-}
-
-// ================= 🔍 SEARCH (TODAY ONLY) =================
+// ================= ค้นหาเฉพาะวันนี้ =================
 function find(){
  result.innerHTML="";
  let n=+search.value;
  if(!n) return;
 
- const today=new Date().getDate();
- let colIndex=-1;
-
+ const today = new Date().getDate();
+ let colIndex = -1;
  [...table.rows[0].cells].forEach((th,i)=>{
    if(th.innerText.includes(today)) colIndex=i;
  });
@@ -136,42 +137,23 @@ function find(){
    return;
  }
 
- let out=[];
+ let names = [];
  [...table.rows].forEach((r,ri)=>{
    if(ri===0) return;
-   let cell=r.cells[colIndex];
+   let cell = r.cells[colIndex];
    if(cell && +cell.innerText===n){
-     out.push(`${r.cells[0].innerText} (${r.cells[1].innerText})`);
+     names.push(`${r.cells[0].innerText} (${r.cells[1].innerText})`);
    }
  });
 
- result.innerHTML=
-   `<b>เวรเลข ${n} (วันนี้)</b><br>`+
-   (out.length?out.join("<br>"):"ไม่มีผู้เข้าเวร");
+ result.innerHTML=`<b>วันนี้ เลขเวร ${n} มีทั้งหมด ${names.length} คน</b><br>`+
+                   (names.length ? names.join("<br>") : "ไม่มีผู้เข้าเวร");
 }
 
-// ================= TODAY / RESET =================
-function showToday(){
- document.querySelectorAll(".today").forEach(c=>c.classList.remove("today"));
- let d=new Date().getDate();
- [...table.rows[0].cells].forEach((th,i)=>{
-   if(th.innerText.includes(d)){
-     [...table.rows].forEach((r,ri)=>{
-       if(ri>0 && r.cells[i]) r.cells[i].classList.add("today");
-     });
-   }
- });
-}
-
-function resetAll(){
- if(!confirm("ยืนยันรีเซ็ตเวรใหม่ทั้งปี?")) return;
- localStorage.clear();
- render();
- alert("รีเซ็ตเรียบร้อย");
-}
-
+// ================= EVENT =================
 monthSel.onchange=yearSel.onchange=render;
 search.oninput=find;
+
 render();
 </script>
 </body>
