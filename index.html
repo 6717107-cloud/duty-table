@@ -183,17 +183,23 @@ function render(){
 }
 
 function addSection(title,list,days){
-  table.innerHTML+=`<tr class="section"><td colspan="${days.length+2}">${title}</td></tr>`;
-  list.forEach(s=>{
-    let r=`<tr><td>${s.name}</td><td>${s.room}</td>`;
+  table.innerHTML+=`<tr class="section">
+    <td colspan="${days.length+2}">${title}</td>
+  </tr>`;
+
+  list.forEach((s,index)=>{
+    let r = `<tr>
+      <td>${index+1}. ${s.name}</td>
+      <td>${s.room}</td>`;
     days.forEach((_,i)=>{
-      const v=i%8+1;
-      r+=`<td class="cell v${v}" onclick="edit(this)">${v}</td>`;
+      const v = i % 8 + 1;
+      r += `<td class="cell v${v}" onclick="edit(this)">${v}</td>`;
     });
-    r+="</tr>";
-    table.innerHTML+=r;
+    r += "</tr>";
+    table.innerHTML += r;
   });
 }
+
 
 function edit(td){
   const v=prompt("ใส่เลขเวร (1-8)",td.innerText);
