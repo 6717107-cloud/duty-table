@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>ตารางเวร</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  body {
+    font-family: sans-serif;
+    padding: 10px;
+    background: #f9f9f9;
+  }
+  h2 { text-align: center; }
+  .controls {
+    text-align: center;
+    margin-bottom: 10px;
+  }
+  select {
+    font-size: 16px;
+    padding: 5px;
+    margin: 0 5px;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    background: white;
+  }
+  th, td {
+    border: 1px solid #ccc;
+    padding: 6px;
+    text-align: center;
+    font-size: 14px;
+  }
+  th {
+    background: #eee;
+    position: sticky;
+    top: 0;
+  }
+  td.day {
+    cursor: pointer;
+  }
+  td.day:hover {
+    background: #dff0ff;
+  }
+</style>
+</head>
+<body>
+
+<h2>ตารางเวรนักเรียน</h2>
+
+<div class="controls">
+  เดือน:
+  <select id="month"></select>
+  ปี (พ.ศ.):
+  <select id="year"></select>
+</div>
+
+<table id="schedule"></table>
+
+<script>
+const students = [
+  { name: "โน่" },
+  { name: "เอ" },
+  { name: "บี" },
+  { name: "ซี" }
+];
+
+const monthNames = [
+  "มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน",
+  "กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"
+];
+
+const daysTH = ["อาทิตย์","จันทร์","อังคาร","พุธ","พฤหัสบดี","ศุกร์","เสาร์"];
+
+const monthSelect = document.getElementById("month");
+const yearSelect = document.getElementById("year");
+
+monthNames.forEach((m,i)=>{
+  monthSelect.innerHTML += `<option value="${i}">${m}</option>`;
+});
+
+for(let y=2567;y<=2575;y++){
+  yearSelect.innerHTML += `<option value="${y}">${y}</option>`;
+}
+
+monthSelect.value = new Date().getMonth();
+yearSelect.value = new Date().getFullYear() + 543;
+
+function renderTable(){
+  const month = Number(monthSelect.value);
+  const yearBE = Number(yearSelect.value);
+  const yearCE = yearBE - 543;
+
+  const daysInMonth = new Date(yearCE, month+1, 0).getDate();
+  const table = document.getElementById("schedule");
+
+  let html = "<tr><th>ชื่อ</th>";
+  for(let d=1; d<=daysInMonth; d++){
+    html += `<th>${d}</th>`;
+  }
+  html += "</tr>";
+
+  students.forEach(s=>{
+    html += `<tr><td>${s.name}</td>`;
+    for(let d=1; d<=daysInMonth; d++){
+      html += `<td class="day" onclick="showDay(${d})">${((d-1)%8)+1}</td>`;
+    }
+    html += "</tr>`;
+  });
+
+  table.innerHTML = html;
+}
+
+function showDay(day){
+  const month = Number(monthSelect.value);
+  const yearBE = Number(yearSelect.value);
+  const yearCE = yearBE - 543;
+
+  const date = new Date(yearCE, month, day);
+  alert(
+    `📅 วัน${daysTH[date.getDay()]}\n` +
+    `🗓️ ${day} ${monthNames[month]} ${yearBE}`
+  );
+}
+
+monthSelect.onchange = renderTable;
+yearSelect.onchange = renderTable;
+
+renderTable();
+</script>
+
+</body>
+</html>
