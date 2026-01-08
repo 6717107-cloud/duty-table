@@ -47,6 +47,11 @@ th {
   z-index: 2;
 }
 
+.section {
+  background:#dfefff;
+  font-weight:bold;
+}
+
 .day-header {
   font-size: 11px;
   color: #555;
@@ -82,117 +87,109 @@ td.cell {
 <table id="table"></table>
 
 <script>
-// ================== ข้อมูลนักเรียน ==================
-const students = [
-  { name: "นาย ณัฐวัฒน์ เกตุนอก", room: "5/1" },
-  { name: "นาย กฤตภาส นามพะเนาว์", room: "5/1" },
-  { name: "นางสาว พิยดา วงศ์ใหญ่", room: "5/1" },
-  { name: "นางสาว กันกมล มูลจันทร์", room: "5/1" },
-  { name: "นางสาว พรรณิภา คำสอนพันธุ์", room: "5/1" },
-  { name: "นางสาว พิชญา ซ้ายจันทึก", room: "5/1" },
-  { name: "นางสาว ณิชานันท์ นาคหมื่นไวย์", room: "5/1" },
-  { name: "นาย ภาณุพงษ์ ดันไธสง", room: "5/1" },
-  { name: "นาย เปรมอานนท์ เตี้ยจัตุรัส", room: "5/1" },
+// ================== ข้อมูล ==================
+const council = [
+  { name:"นาย ณัฐวัฒน์ เกตุนอก", room:"5/1" },
+  { name:"นาย กฤตภาส นามพะเนาว์", room:"5/1" },
+  { name:"นางสาว พิยดา วงศ์ใหญ่", room:"5/1" },
+  { name:"นางสาว กันกมล มูลจันทร์", room:"5/1" },
+  { name:"นางสาว พรรณิภา คำสอนพันธุ์", room:"5/1" },
+  { name:"นางสาว พิชญา ซ้ายจันทึก", room:"5/1" },
+  { name:"นางสาว ณิชานันท์ นาคหมื่นไวย์", room:"5/1" },
+  { name:"นาย ภาณุพงษ์ ดันไธสง", room:"5/1" },
+  { name:"นาย เปรมอานนท์ เตี้ยจัตุรัส", room:"5/1" },
 
-  { name: "นาย กวินภพ บ้วนนอก", room: "5/2" },
-  { name: "นาย ก้องนเรนทร์ กระจ่างโพธิ์", room: "5/2" },
-  { name: "นาย ฐิติพันธุ์ เตี้ยไธสง", room: "5/2" },
-  { name: "นาย ปัญญา ทองนอก", room: "5/2" },
-  { name: "นางสาว อภิรดา สัญจรโคกสูง", room: "5/2" },
-  { name: "นางสาว ภคนันท์ รักกลาง", room: "5/2" },
-  { name: "นางสาว อารีญากร ปราบอาต", room: "5/2" },
-  { name: "นางสาว พรสวรรค์ ขาวละออ", room: "5/2" },
-  { name: "นางสาว กัญญา มุ่งกลาง", room: "5/2" },
-
-  { name: "นาย ศุกลวัฒน์ นรินทร์นอก", room: "5/3" },
-  { name: "นาย ภัครพนธ์ บุญธานี", room: "5/3" },
-  { name: "นาย ณัฐกิตติ์ รอดวินิจ", room: "5/3" },
-  { name: "นางสาว นฤเนตร จรรยารัตนกุล", room: "5/3" },
-  { name: "นางสาว วราทิพย์ นนนอก", room: "5/3" },
-  { name: "นางสาว ธนาพร วงษ์อัง", room: "5/3" },
-
-  { name: "นาย นนทกร โค้งนอก", room: "5/4" },
-  { name: "นางสาว รัชชยาวตรี ป้องภักดี", room: "5/4" },
-
-  { name: "นางสาว วัชราภรณ์ ห่องคำ", room: "5/5" },
-  { name: "นางสาว ภัทธีมา ชัยชะนะ", room: "5/5" },
-  { name: "นาย ธีรกานต์ ทาทอง", room: "5/5" },
-
-  { name: "นางสาว ชนิกา ชาญตะกั่ว", room: "5/6" },
-  { name: "นางสาว ถิรมน ปุ๊กสูงเนิน", room: "5/7" },
-  { name: "นาย พัสกร ปิ่นประเสริฐ", room: "5/9" },
-
-  { name: "นาย ณัฐกานต์ ร้อยลา", room: "5/11" },
-  { name: "นางสาว ชาลิสา แสงทองสี", room: "5/11" },
-  { name: "นางสาว จุฑารัตน์ ทดกลาง", room: "5/11" },
-  { name: "นางสาว วรัทยา หมู่โสภิญ", room: "5/11" },
-  { name: "นางสาว อาริสรา กุนอก", room: "5/11" },
-  { name: "นางสาว ชฎาพร อุสาพรหม", room: "5/11" },
-  { name: "นางสาว ณัชชา บินอารีเปน", room: "5/11" }
+  { name:"นาย กวินภพ บ้วนนอก", room:"5/2" },
+  { name:"นาย ก้องนเรนทร์ กระจ่างโพธิ์", room:"5/2" },
+  { name:"นาย ฐิติพันธุ์ เตี้ยไธสง", room:"5/2" },
+  { name:"นาย ปัญญา ทองนอก", room:"5/2" },
+  { name:"นางสาว อภิรดา สัญจรโคกสูง", room:"5/2" },
+  { name:"นางสาว ภคนันท์ รักกลาง", room:"5/2" },
+  { name:"นางสาว อารีญากร ปราบอาต", room:"5/2" },
+  { name:"นางสาว พรสวรรค์ ขาวละออ", room:"5/2" },
+  { name:"นางสาว กัญญา มุ่งกลาง", room:"5/2" }
 ];
 
-// ================== ตัวแปรระบบ ==================
+const subcommittee = [
+  { name:"นางสาว วรกาญจน์ โพธิ์กลิ่น", room:"4/1" },
+  { name:"นางสาว สิริกานดา ขอร่วมกลาง", room:"4/1" },
+  { name:"นาย สุริยะ ปากวิเศษ", room:"4/2" },
+  { name:"นางสาว ธนกมล ศรีธาวิรัตน์", room:"4/2" },
+  { name:"นางสาว ปาริฉัตร ผึ่งด่านกลาง", room:"4/2" },
+  { name:"นาย ทิวาวัชร์ แก้วลอดหล้า", room:"4/3" },
+  { name:"นางสาว จงกลณี ปัญญา", room:"4/4" },
+  { name:"นาย ฉัตรดนัย ทองอินทร์", room:"4/7" },
+  { name:"นาย ก้องภพ แสนธนู", room:"4/12" },
+  { name:"นาย สุวรรณภูมิ จบศรี", room:"4/12" },
+  { name:"นาย เดชาวัต ตากิ่มนอก", room:"4/12" },
+  { name:"นาย สุภกิตต์ วรวุฒิ", room:"4/12" },
+  { name:"นางสาว ธัญรดา พูนสันเทียะ", room:"4/12" },
+  { name:"นางสาว ณัฐกานต์ พระริต", room:"4/12" },
+  { name:"นางสาว พิชญากร มุ่งผลกลาง", room:"4/12" },
+  { name:"นางสาว เกวลิน ดุงโคกกรวด", room:"4/12" }
+];
+
+// ================== ระบบ ==================
 const monthNames = ["มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน",
 "กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"];
-const dayNamesShort = ["อา","จ","อ","พ","พฤ","ศ","ส"];
+const dayNames = ["อา","จ","อ","พ","พฤ","ศ","ส"];
 
-const monthSelect = document.getElementById("month");
-const yearSelect = document.getElementById("year");
+const monthSel = document.getElementById("month");
+const yearSel = document.getElementById("year");
 const table = document.getElementById("table");
 
-// เดือน / ปี
-monthNames.forEach((m,i)=> monthSelect.innerHTML += `<option value="${i}">${m}</option>`);
-for(let y=2567;y<=2575;y++) yearSelect.innerHTML += `<option>${y}</option>`;
+monthNames.forEach((m,i)=>monthSel.innerHTML+=`<option value="${i}">${m}</option>`);
+for(let y=2567;y<=2575;y++) yearSel.innerHTML+=`<option>${y}</option>`;
 
-monthSelect.value = new Date().getMonth();
-yearSelect.value = new Date().getFullYear() + 543;
+monthSel.value = new Date().getMonth();
+yearSel.value = new Date().getFullYear()+543;
 
-// ================== สร้างตาราง ==================
 function render(){
-  const month = +monthSelect.value;
-  const yearCE = +yearSelect.value - 543;
+  const m = +monthSel.value;
+  const y = +yearSel.value - 543;
   table.innerHTML = "";
 
-  const daysInMonth = new Date(yearCE, month+1, 0).getDate();
-  const workDays = [];
-
-  for(let d=1; d<=daysInMonth; d++){
-    const date = new Date(yearCE, month, d);
-    if(date.getDay() !== 0 && date.getDay() !== 6){
-      workDays.push({d, day: date.getDay()});
+  const days = [];
+  const dim = new Date(y,m+1,0).getDate();
+  for(let d=1; d<=dim; d++){
+    const date = new Date(y,m,d);
+    if(date.getDay()!==0 && date.getDay()!==6){
+      days.push({d,day:date.getDay()});
     }
   }
 
-  // หัวตาราง
-  let head = "<tr><th>ชื่อ</th><th>สภา</th>";
-  workDays.forEach(w=>{
-    head += `<th>${w.d}<div class="day-header">${dayNamesShort[w.day]}</div></th>`;
-  });
-  head += "</tr>";
-  table.innerHTML += head;
+  let head = "<tr><th>ชื่อ</th><th>ห้อง</th>";
+  days.forEach(x=> head+=`<th>${x.d}<div class="day-header">${dayNames[x.day]}</div></th>`);
+  head+="</tr>";
+  table.innerHTML+=head;
 
-  // ข้อมูล
-  students.forEach(s=>{
-    let row = `<tr><td>${s.name}</td><td>${s.room}</td>`;
-    workDays.forEach((_,i)=>{
-      const v = (i % 8) + 1;
-      row += `<td class="cell v${v}" onclick="edit(this)">${v}</td>`;
+  addSection("สภานักเรียน", council, days);
+  addSection("อนุกรรมการ", subcommittee, days);
+}
+
+function addSection(title, list, days){
+  table.innerHTML+=`<tr class="section"><td colspan="${days.length+2}">${title}</td></tr>`;
+  list.forEach(s=>{
+    let r = `<tr><td>${s.name}</td><td>${s.room}</td>`;
+    days.forEach((_,i)=>{
+      const v = (i%8)+1;
+      r+=`<td class="cell v${v}" onclick="edit(this)">${v}</td>`;
     });
-    row += "</tr>";
-    table.innerHTML += row;
+    r+="</tr>";
+    table.innerHTML+=r;
   });
 }
 
 function edit(td){
   const v = prompt("ใส่เลขเวร (1-8)", td.innerText);
-  if(v >= 1 && v <= 8){
-    td.className = "cell v" + v;
-    td.innerText = v;
+  if(v>=1 && v<=8){
+    td.className="cell v"+v;
+    td.innerText=v;
   }
 }
 
-monthSelect.onchange = render;
-yearSelect.onchange = render;
+monthSel.onchange=render;
+yearSel.onchange=render;
 render();
 </script>
 
