@@ -23,7 +23,7 @@ th{background:#eee;position:sticky;top:0}
 </head>
 <body>
 
-<h2>ตารางเวรนักเรียน (ต่อเนื่องทั้งปี)</h2>
+<h2>ตารางเวรนักเรียน (เวรต่อเนื่องทั้งปี)</h2>
 
 <div class="controls">
   เดือน <select id="month"></select>
@@ -38,40 +38,40 @@ th{background:#eee;position:sticky;top:0}
 
 <script>
 // ================= DATA =================
-const council = [...[
-"นาย ณัฐวัฒน์ เกตุนอก|5/1","นาย กฤตภาส นามพะเนาว์|5/1","นางสาว พิยดา วงศ์ใหญ่|5/1",
-"นางสาว กันกมล มูลจันทร์|5/1","นางสาว พรรณิภา คำสอนพันธุ์|5/1",
-"นางสาว พิชญา ซ้ายจันทึก|5/1","นางสาว ณิชานันท์ นาคหมื่นไวย์|5/1",
-"นาย ภาณุพงษ์ ดันไธสง|5/1","นาย เปรมอานนท์ เตี้ยจัตุรัส|5/1",
-"นาย กวินภพ บ้วนนอก|5/2","นาย ก้องนเรนทร์ กระจ่างโพธิ์|5/2",
-"นาย ฐิติพันธุ์ เตี้ยไธสง|5/2","นาย ปัญญา ทองนอก|5/2",
-"นางสาว อภิรดา สัญจรโคกสูง|5/2","นางสาว ภคนันท์ รักกลาง|5/2",
-"นางสาว อารีญากร ปราบอาต|5/2","นางสาว พรสวรรค์ ขาวละออ|5/2",
-"นางสาว กัญญา มุ่งกลาง|5/2",
-"นาย ศุกลวัฒน์ นรินทร์นอก|5/3","นาย ภัครพนธ์ บุญธานี|5/3",
-"นาย ณัฐกิตติ์ รอดวินิจ|5/3","นางสาว นฤเนตร จรรยารัตนกุล|5/3",
-"นางสาว วราทิพย์ นนนอก|5/3","นางสาว ธนาพร วงษ์อัง|5/3",
-"นาย นนทกร โค้งนอก|5/4","นางสาว รัชชยาวตรี ป้องภักดี|5/4",
-"นางสาว วัชราภรณ์ ห่องคำ|5/5","นางสาว ภัทธีมา ชัยชะนะ|5/5",
-"นาย ธีรกานต์ ทาทอง|5/5",
-"นางสาว ชนิกา ชาญตะกั่ว|5/6","นางสาว ถิรมน ปุ๊กสูงเนิน|5/7",
-"นาย พัสกร ปิ่นประเสริฐ|5/9",
-"นาย ณัฐกานต์ ร้อยลา|5/11","นางสาว ชาลิสา แสงทองสี|5/11",
-"นางสาว จุฑารัตน์ ทดกลาง|5/11","นางสาว วรัทยา หมู่โสภิญ|5/11",
-"นางสาว อาริสรา กุนอก|5/11","นางสาว ชฎาพร อุสาพรหม|5/11",
-"นางสาว ณัชชา บินอารีเปน|5/11"
-]].map(x=>({name:x.split("|")[0],room:x.split("|")[1]}));
+const council = [
+ "นาย ณัฐวัฒน์ เกตุนอก|5/1","นาย กฤตภาส นามพะเนาว์|5/1","นางสาว พิยดา วงศ์ใหญ่|5/1",
+ "นางสาว กันกมล มูลจันทร์|5/1","นางสาว พรรณิภา คำสอนพันธุ์|5/1",
+ "นางสาว พิชญา ซ้ายจันทึก|5/1","นางสาว ณิชานันท์ นาคหมื่นไวย์|5/1",
+ "นาย ภาณุพงษ์ ดันไธสง|5/1","นาย เปรมอานนท์ เตี้ยจัตุรัส|5/1",
+ "นาย กวินภพ บ้วนนอก|5/2","นาย ก้องนเรนทร์ กระจ่างโพธิ์|5/2",
+ "นาย ฐิติพันธุ์ เตี้ยไธสง|5/2","นาย ปัญญา ทองนอก|5/2",
+ "นางสาว อภิรดา สัญจรโคกสูง|5/2","นางสาว ภคนันท์ รักกลาง|5/2",
+ "นางสาว อารีญากร ปราบอาต|5/2","นางสาว พรสวรรค์ ขาวละออ|5/2",
+ "นางสาว กัญญา มุ่งกลาง|5/2",
+ "นาย ศุกลวัฒน์ นรินทร์นอก|5/3","นาย ภัครพนธ์ บุญธานี|5/3",
+ "นาย ณัฐกิตติ์ รอดวินิจ|5/3","นางสาว นฤเนตร จรรยารัตนกุล|5/3",
+ "นางสาว วราทิพย์ นนนอก|5/3","นางสาว ธนาพร วงษ์อัง|5/3",
+ "นาย นนทกร โค้งนอก|5/4","นางสาว รัชชยาวตรี ป้องภักดี|5/4",
+ "นางสาว วัชราภรณ์ ห่องคำ|5/5","นางสาว ภัทธีมา ชัยชะนะ|5/5",
+ "นาย ธีรกานต์ ทาทอง|5/5",
+ "นางสาว ชนิกา ชาญตะกั่ว|5/6","นางสาว ถิรมน ปุ๊กสูงเนิน|5/7",
+ "นาย พัสกร ปิ่นประเสริฐ|5/9",
+ "นาย ณัฐกานต์ ร้อยลา|5/11","นางสาว ชาลิสา แสงทองสี|5/11",
+ "นางสาว จุฑารัตน์ ทดกลาง|5/11","นางสาว วรัทยา หมู่โสภิญ|5/11",
+ "นางสาว อาริสรา กุนอก|5/11","นางสาว ชฎาพร อุสาพรหม|5/11",
+ "นางสาว ณัชชา บินอารีเปน|5/11"
+].map(x=>({name:x.split("|")[0],room:x.split("|")[1]}));
 
-const subcommittee = [...[
-"นางสาว วรกาญจน์ โพธิ์กลิ่น|4/1","นางสาว สิริกานดา ขอร่วมกลาง|4/1",
-"นาย สุริยะ ปากวิเศษ|4/2","นางสาว ธนกมล ศรีธาวิรัตน์|4/2",
-"นางสาว ปาริฉัตร ผึ่งด่านกลาง|4/2","นาย ทิวาวัชร์ แก้วลอดหล้า|4/3",
-"นางสาว จงกลณี ปัญญา|4/4","นาย ฉัตรดนัย ทองอินทร์|4/7",
-"นาย ก้องภพ แสนธนู|4/12","นาย สุวรรณภูมิ จบศรี|4/12",
-"นาย เดชาวัต ตากิ่มนอก|4/12","นาย สุภกิตต์ วรวุฒิ|4/12",
-"นางสาว ธัญรดา พูนสันเทียะ|4/12","นางสาว ณัฐกานต์ พระริต|4/12",
-"นางสาว พิชญากร มุ่งผลกลาง|4/12","นางสาว เกวลิน ดุงโคกกรวด|4/12"
-]].map(x=>({name:x.split("|")[0],room:x.split("|")[1]}));
+const subcommittee = [
+ "นางสาว วรกาญจน์ โพธิ์กลิ่น|4/1","นางสาว สิริกานดา ขอร่วมกลาง|4/1",
+ "นาย สุริยะ ปากวิเศษ|4/2","นางสาว ธนกมล ศรีธาวิรัตน์|4/2",
+ "นางสาว ปาริฉัตร ผึ่งด่านกลาง|4/2","นาย ทิวาวัชร์ แก้วลอดหล้า|4/3",
+ "นางสาว จงกลณี ปัญญา|4/4","นาย ฉัตรดนัย ทองอินทร์|4/7",
+ "นาย ก้องภพ แสนธนู|4/12","นาย สุวรรณภูมิ จบศรี|4/12",
+ "นาย เดชาวัต ตากิ่มนอก|4/12","นาย สุภกิตต์ วรวุฒิ|4/12",
+ "นางสาว ธัญรดา พูนสันเทียะ|4/12","นางสาว ณัฐกานต์ พระริต|4/12",
+ "นางสาว พิชญากร มุ่งผลกลาง|4/12","นางสาว เกวลิน ดุงโคกกรวด|4/12"
+].map(x=>({name:x.split("|")[0],room:x.split("|")[1]}));
 
 // ================= SYSTEM =================
 const monthSel=document.getElementById("month");
@@ -79,6 +79,8 @@ const yearSel=document.getElementById("year");
 const table=document.getElementById("table");
 const search=document.getElementById("search");
 const result=document.getElementById("result");
+
+const dayNames = ["อา.","จ.","อ.","พ.","พฤ.","ศ.","ส."];
 
 ["มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน",
 "กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"]
@@ -88,23 +90,29 @@ for(let y=2567;y<=2575;y++) yearSel.innerHTML+=`<option>${y}</option>`;
 monthSel.value=new Date().getMonth();
 yearSel.value=new Date().getFullYear()+543;
 
-function getLast(){ return JSON.parse(localStorage.getItem("last-duty")||"{}"); }
-function saveLast(d){ localStorage.setItem("last-duty",JSON.stringify(d)); }
+// ---- storage ----
+function getLast(){return JSON.parse(localStorage.getItem("last-duty")||"{}");}
+function saveLast(d){localStorage.setItem("last-duty",JSON.stringify(d));}
+function key(){return `month-${monthSel.value}-${yearSel.value}`;}
+function load(){return JSON.parse(localStorage.getItem(key())||"{}");}
+function save(d){localStorage.setItem(key(),JSON.stringify(d));}
 
-function key(){ return `month-${monthSel.value}-${yearSel.value}`; }
-function load(){ return JSON.parse(localStorage.getItem(key())||"{}"); }
-function save(d){ localStorage.setItem(key(),JSON.stringify(d)); }
-
+// ================= RENDER =================
 function render(){
  table.innerHTML="";
  const y=yearSel.value-543,m=+monthSel.value;
  let days=[];
  for(let d=1;d<=new Date(y,m+1,0).getDate();d++){
    let wd=new Date(y,m,d).getDay();
-   if(wd!=0 && wd!=6) days.push(d);
+   if(wd!=0 && wd!=6){
+     days.push({day:d,wd});
+   }
  }
+
+ // header
  let h="<tr><th>ชื่อ</th><th>ห้อง</th>";
- days.forEach(d=>h+=`<th>${d}</th>`); h+="</tr>";
+ days.forEach(d=>h+=`<th>${dayNames[d.wd]}<br>${d.day}</th>`);
+ h+="</tr>";
  table.innerHTML+=h;
 
  addSection("สภานักเรียน",council,days);
@@ -115,18 +123,21 @@ function render(){
 function addSection(title,list,days){
  table.innerHTML+=`<tr class="section"><td colspan="${days.length+2}">${title}</td></tr>`;
  let monthData=load(), last=getLast();
+
  list.forEach((s,i)=>{
    let start=(last[s.name]||0)%8+1;
    let r=`<tr><td>${i+1}. ${s.name}</td><td>${s.room}</td>`;
    days.forEach((d,j)=>{
-     let v=monthData[`${s.name}-${d}`]||((start+j-1)%8+1);
-     r+=`<td class="cell v${v}" onclick="edit(this,'${s.name}',${d})">${v}</td>`;
+     let v = monthData[`${s.name}-${j}`] || ((start+j-1)%8+1);
+     r+=`<td class="cell v${v}" onclick="edit(this,'${s.name}',${j})">${v}</td>`;
    });
-   r+="</tr>"; table.innerHTML+=r;
+   r+="</tr>";
+   table.innerHTML+=r;
  });
 }
 
-function edit(td,name,startDay){
+// ================= EDIT =================
+function edit(td,name,startIndex){
  let v=parseInt(prompt("เลขเวรเริ่มต้น (1-8)",td.innerText));
  if(!v||v<1||v>8) return;
 
@@ -137,14 +148,17 @@ function edit(td,name,startDay){
  for(let i=idx;i<cells.length;i++){
    cells[i].innerText=v;
    cells[i].className="cell v"+v;
-   data[`${name}-${startDay+(i-idx)}`]=v;
+   data[`${name}-${i}`]=v;
    v=v%8+1;
  }
 
  last[name]=v===1?8:v-1;
- saveLast(last); save(data); find();
+ saveLast(last);
+ save(data);
+ find();
 }
 
+// ================= SEARCH =================
 function find(){
  result.innerHTML="";
  let n=+search.value; if(!n) return;
@@ -152,13 +166,15 @@ function find(){
  document.querySelectorAll(".cell").forEach(c=>{
    if(+c.innerText===n){
      let tr=c.parentElement;
-     let day=table.rows[0].cells[c.cellIndex].innerText;
-     out.push(`${tr.children[0].innerText} (${tr.children[1].innerText}) วันที่ ${day}`);
+     let col=c.cellIndex;
+     let day=table.rows[0].cells[col].innerText.replace("\n"," ");
+     out.push(`${tr.children[0].innerText} (${tr.children[1].innerText}) → ${day}`);
    }
  });
  result.innerHTML="<b>เวรเลข "+n+"</b><br>"+out.join("<br>");
 }
 
+// ================= TODAY / RESET =================
 let todayMode=false;
 function showToday(){
  todayMode=!todayMode;
@@ -166,12 +182,10 @@ function showToday(){
  if(!todayMode) return;
 
  let d=new Date().getDate();
- document.querySelectorAll("th").forEach((th,i)=>{
-   if(th.innerText==d){
+ [...table.rows[0].cells].forEach((th,i)=>{
+   if(th.innerText.includes(d)){
      [...table.rows].forEach((r,ri)=>{
-       if(ri>0 && r.cells[i]){
-         r.cells[i].classList.add("today");
-       }
+       if(ri>0 && r.cells[i]) r.cells[i].classList.add("today");
      });
    }
  });
