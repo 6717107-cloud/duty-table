@@ -15,7 +15,6 @@ body {
 
 h2 {
   text-align: center;
-  margin: 10px 0;
 }
 
 .controls {
@@ -34,6 +33,133 @@ table {
   background: white;
 }
 
+th, td {
+  border: 1px solid #ccc;
+  padding: 4px;
+  text-align: center;
+  font-size: 13px;
+}
+
+th {
+  background: #eee;
+  position: sticky;
+  top: 0;
+}
+
+.day-header {
+  font-size: 11px;
+  color: #555;
+}
+
+td.cell {
+  cursor: pointer;
+  font-weight: bold;
+}
+
+/* สีเวร */
+.v1 { background:#e3f2fd; }
+.v2 { background:#fce4ec; }
+.v3 { background:#e8f5e9; }
+.v4 { background:#fff3e0; }
+.v5 { background:#ede7f6; }
+.v6 { background:#f3e5f5; }
+.v7 { background:#e0f2f1; }
+.v8 { background:#fbe9e7; }
+</style>
+</head>
+<body>
+
+<h2>ตารางเวรนักเรียน (จันทร์–ศุกร์)</h2>
+
+<div class="controls">
+  เดือน:
+  <select id="month"></select>
+  ปี (พ.ศ.):
+  <select id="year"></select>
+</div>
+
+<table id="table"></table>
+
+<script>
+const students = ["โน่","เอ","บี","ซี","ดี"];
+
+const monthNames = [
+  "มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน",
+  "กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"
+];
+
+const dayNamesShort = ["อา","จ","อ","พ","พฤ","ศ","ส"];
+
+const monthSelect = document.getElementById("month");
+const yearSelect = document.getElementById("year");
+const table = document.getElementById("table");
+
+// เติมเดือน
+monthNames.forEach((m,i)=>{
+  monthSelect.innerHTML += `<option value="${i}">${m}</option>`;
+});
+
+// เติมปี
+for(let y=2567;y<=2575;y++){
+  yearSelect.innerHTML += `<option value="${y}">${y}</option>`;
+}
+
+monthSelect.value = new Date().getMonth();
+yearSelect.value = new Date().getFullYear() + 543;
+
+function render(){
+  const month = +monthSelect.value;
+  const yearBE = +yearSelect.value;
+  const yearCE = yearBE - 543;
+
+  const daysInMonth = new Date(yearCE, month+1, 0).getDate();
+  table.innerHTML = "";
+
+  // เก็บเฉพาะวัน จ–ศ
+  const workDays = [];
+  for(let d=1; d<=daysInMonth; d++){
+    const date = new Date(yearCE, month, d);
+    const day = date.getDay();
+    if(day !== 0 && day !== 6){ // ไม่เอา อาทิตย์(0) เสาร์(6)
+      workDays.push({d, day});
+    }
+  }
+
+  // หัวตาราง
+  let head = "<tr><th>ชื่อ</th>";
+  workDays.forEach(w=>{
+    head += `<th>${w.d}<div class="day-header">${dayNamesShort[w.day]}</div></th>`;
+  });
+  head += "</tr>";
+  table.innerHTML += head;
+
+  // แถวข้อมูล
+  students.forEach(name=>{
+    let row = `<tr><td>${name}</td>`;
+    workDays.forEach((_,i)=>{
+      const v = (i % 8) + 1;
+      row += `<td class="cell v${v}" onclick="edit(this)">${v}</td>`;
+    });
+    row += "</tr>";
+    table.innerHTML += row;
+  });
+}
+
+function edit(td){
+  const val = prompt("ใส่เลขเวร (1-8)", td.innerText);
+  if(!val || val < 1 || val > 8) return;
+  td.className = "cell v"+val;
+  td.innerText = val;
+}
+
+monthSelect.onchange = render;
+yearSelect.onchange = render;
+
+render();
+</script>
+
+</body>
+</html>
 th, td {
   border: 1px solid #ccc;
   padding: 4px;
